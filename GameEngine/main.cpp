@@ -8,6 +8,10 @@
 #include <Player/Projectile.h>
 #include <Logic/GameManager.h>
 #include <Player/Enemy.h>
+#include "Resources/Imgui/imgui.h"
+#include "Resources/Imgui/imgui_impl_glfw.h"
+#include "Resources/Imgui/imgui_impl_opengl3.h"
+#include <Player/QuestItem.h>
 
 void processKeyboardInput ();
 
@@ -26,6 +30,9 @@ GameManager gameManager;
 std::vector<Projectile> fireballs;
 // Enemies container
 std::vector<Enemy> enemies;
+//Quest Items
+QuestItem staff(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
 glm::vec3 lightColor = glm::vec3(1.0f);
 glm::vec3 lightPos = glm::vec3(-180.0f, 100.0f, -200.0f);
@@ -53,6 +60,19 @@ int main()
 	GLuint tex3 = loadBMP("Resources/Textures/orange.bmp");
 
 	glEnable(GL_DEPTH_TEST);
+
+	// Initialize ImGui Context
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	// Setup ImGui style
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+	ImGui_ImplOpenGL3_Init("#version 400");
+
+	//Initialize ImGui Backends
+	//ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
+	//ImGui_ImplOpenGL3_Init("#version 400");
 	
 	std::vector<Texture> textures2;
 	textures2.push_back(Texture());
@@ -77,6 +97,9 @@ int main()
 	// Player
 	playerBox = BoundingBox(camera.getCameraPosition(), glm::vec3(10.0f, 20.0f, 10.0f));
 
+	//Grail
+	grail.isActive = false;
+
 	// Zombi
 	for (int i = 0; i < 5; i++) {
 		// Spawning them in a line for testing
@@ -85,6 +108,8 @@ int main()
 	}
 	
 	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
+
+	
 	//check if we close the window or press the escape button
 	while (!window.isPressed(GLFW_KEY_ESCAPE) &&
 		glfwWindowShouldClose(window.getWindow()) == 0)
@@ -115,7 +140,43 @@ int main()
 		}
 
 		gameManager.update(camera.getCameraPosition(), enemies);
-		//std::cout << gameManager.getCurrentTaskInfo() << std::endl;
+
+		// --- QUEST LOGIC UPDATE ---
+
+		// 1. Sync Grail visibility with GameManager
+		// If the Boss is dead, GameManager sets grailSpawned = true.
+		// We make the item physical/visible only if it hasn't been collected yet.
+		if (gameManager.grailSpawned && !grail.isCollected) {
+			grail.isActive = true;
+		}
+
+		// --- QUEST ITEM COLLISIONS ---
+
+		// Staff Collision
+		if (staff.isActive && playerBox.checkCollision(staff.box)) {
+			std::cout << "Staff collected!" << std::endl;
+
+			staff.isCollected = true;
+			staff.isActive = false; // Hide it
+
+			if (gameManager.currentTaskIndex == 0) {
+				gameManager.tasks[0].isCompleted = true;
+			}
+		}
+
+		// Grail Collision
+		if (grail.isActive && playerBox.checkCollision(grail.box)) {
+			std::cout << "Holy Grail collected!" << std::endl;
+
+			grail.isCollected = true;
+			grail.isActive = false; // Hide it (put in inventory)
+
+			if (gameManager.currentTaskIndex == 3) {
+				gameManager.tasks[3].isCompleted = true;
+
+				gameManager.grailSpawned = false;
+			}
+		}
 
 		// Check collisions
 
@@ -130,7 +191,7 @@ int main()
 
 		
 		for (auto& ball : fireballs) {
-			if (!ball.isActive) continue;
+			if (!ball.isActive && staff.isCollected) continue;
 
 			for (auto& enemy : enemies) {
 				if (enemy.isDead) continue;
@@ -174,7 +235,7 @@ int main()
 		// Draw fireballs
 		for (auto& ball : fireballs)
 		{
-			if (ball.isActive)
+			if (ball.isActive&& staff.isCollected)
 			{
 				glm::mat4 ModelMatrix = glm::mat4(1.0);
 				ModelMatrix = glm::translate(ModelMatrix, ball.position);
@@ -214,7 +275,30 @@ int main()
 			sun.draw(sunShader);
 		}
 
-		//// End code for the light ////
+		// Draw Quest Items
+
+		// Draw Staff
+		if (staff.isActive) {
+			ModelMatrix = glm::mat4(1.0);
+			ModelMatrix = glm::translate(ModelMatrix, staff.position);
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.5f));
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+			glUniform3f(ObjectColorID, 0.6f, 0.4f, 0.2f); // Brown
+			sun.draw(sunShader);
+		}
+
+		// Draw Grail
+		if (grail.isActive) {
+			ModelMatrix = glm::mat4(1.0);
+			ModelMatrix = glm::translate(ModelMatrix, grail.position);
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.5f));
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+			glUniform3f(ObjectColorID, 1.0f, 0.84f, 0.0f);
+			sun.draw(sunShader);
+		}
+
 
 		shader.use();
 
@@ -247,8 +331,51 @@ int main()
 
 		plane.draw(shader);
 
+		// ImGui Rendering Logic
+		// ---------------------------------------------------------
+
+		// Start a new frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		// Define the HUD Window properties
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration |
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoFocusOnAppearing |
+			ImGuiWindowFlags_NoNav;
+
+		ImGui::SetNextWindowPos(ImVec2(10.0f, 10.0f));
+		ImGui::SetNextWindowBgAlpha(0.35f);
+
+		//Begin the ImGui Window
+		if (ImGui::Begin("TaskOverlay", NULL, window_flags))
+		{
+			// Set font scale (make it larger for better visibility)
+			ImGui::SetWindowFontScale(1.5f);
+
+			// Display a static title in Yellow
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "CURRENT OBJECTIVE:");
+
+			// Get the current task description from GameManager
+			std::string currentTask = gameManager.getCurrentTaskInfo();
+
+			// Display the task text in White
+			ImGui::Text("%s", currentTask.c_str());
+		}
+		ImGui::End();
+
+		//Render ImGui data onto the screen
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
 		window.update();
 	}
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 }
 
 void processKeyboardInput()

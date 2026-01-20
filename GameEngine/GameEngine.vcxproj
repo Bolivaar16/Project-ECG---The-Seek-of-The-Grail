@@ -126,12 +126,20 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model Loading\meshLoaderObj.cpp" />
     <ClCompile Include="Model Loading\mesh.cpp" />
+    <ClCompile Include="Resources\Imgui\imgui.cpp" />
+    <ClCompile Include="Resources\Imgui\imgui_demo.cpp" />
+    <ClCompile Include="Resources\Imgui\imgui_draw.cpp" />
+    <ClCompile Include="Resources\Imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Resources\Imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Resources\Imgui\imgui_tables.cpp" />
+    <ClCompile Include="Resources\Imgui\imgui_widgets.cpp" />
     <ClCompile Include="Shaders\shader.cpp" />
     <ClCompile Include="Model Loading\texture.cpp" />
     <ClCompile Include="Source\Logic\GameManager.cpp" />
     <ClCompile Include="Source\Physics\BoundingBox.cpp" />
     <ClCompile Include="Source\Player\Enemy.cpp" />
     <ClCompile Include="Source\Player\Projectile.cpp" />
+    <ClCompile Include="Source\Player\QuestItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera\camera.h" />
@@ -140,9 +148,18 @@
     <ClInclude Include="Include\Physics\BoundingBox.h" />
     <ClInclude Include="Include\Player\Enemy.h" />
     <ClInclude Include="Include\Player\Projectile.h" />
+    <ClInclude Include="Include\Player\QuestItem.h" />
     <ClInclude Include="Model Loading\meshLoaderObj.h" />
     <ClInclude Include="Model Loading\mesh.h" />
     <ClInclude Include="Model Loading\stringTokenizer.h" />
+    <ClInclude Include="Resources\Imgui\imconfig.h" />
+    <ClInclude Include="Resources\Imgui\imgui.h" />
+    <ClInclude Include="Resources\Imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Resources\Imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Resources\Imgui\imgui_internal.h" />
+    <ClInclude Include="Resources\Imgui\imstb_rectpack.h" />
+    <ClInclude Include="Resources\Imgui\imstb_textedit.h" />
+    <ClInclude Include="Resources\Imgui\imstb_truetype.h" />
     <ClInclude Include="Shaders\shader.h" />
     <ClInclude Include="Model Loading\texture.h" />
   </ItemGroup>
