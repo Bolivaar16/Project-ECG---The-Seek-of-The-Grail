@@ -25,7 +25,7 @@ void BoundingBox::update(glm::vec3 _center, glm::vec3 _size)
 
 bool BoundingBox::checkCollision(const BoundingBox& other)
 {
-	// Colissionn AABB (Axis-Aligned Bounding Box)
+	// Colision AABB (Axis-Aligned Bounding Box)
 	bool collisionX = min.x <= other.max.x && max.x >= other.min.x;
 	bool collisionY = min.y <= other.max.y && max.y >= other.min.y;
 	bool collisionZ = min.z <= other.max.z && max.z >= other.min.z;

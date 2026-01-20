@@ -75,7 +75,7 @@ int main()
 
 	// Initialization
 	// Player
-	playerBox = BoundingBox(camera.getCameraPosition(), glm::vec3(1.0f, 2.0f, 1.0f));
+	playerBox = BoundingBox(camera.getCameraPosition(), glm::vec3(10.0f, 20.0f, 10.0f));
 
 	// Zombi
 	for (int i = 0; i < 5; i++) {
@@ -83,7 +83,7 @@ int main()
 		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
 	}
-
+	
 	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
 	//check if we close the window or press the escape button
 	while (!window.isPressed(GLFW_KEY_ESCAPE) &&
@@ -115,7 +115,7 @@ int main()
 		}
 
 		gameManager.update(camera.getCameraPosition(), enemies);
-		std::cout << gameManager.getCurrentTaskInfo() << std::endl;
+		//std::cout << gameManager.getCurrentTaskInfo() << std::endl;
 
 		// Check collisions
 

@@ -12,7 +12,7 @@ Projectile::Projectile(glm::vec3 startPos, glm::vec3 dir)
 	isActive = true;
 
 	// Initialize the bounding box
-	box = BoundingBox(position, glm::vec3(0.5f, 0.5f, 0.5f));
+	box = BoundingBox(position, glm::vec3(3.5f, 3.5f, 3.5f));
 }
 
 void Projectile::update(float deltaTime)
@@ -29,7 +29,7 @@ void Projectile::update(float deltaTime)
 	}
 
 	// Update the collision box to follow the mesh
-	box.update(position, glm::vec3(0.5f, 0.5f, 0.5f));
+	box.update(position, glm::vec3(3.5f, 3.5f, 3.5f));
 }
 
 void Projectile::draw(Shader& shader, Mesh& mesh)
