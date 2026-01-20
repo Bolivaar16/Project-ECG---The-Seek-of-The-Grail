@@ -4,14 +4,28 @@
 #include "Model Loading\mesh.h"
 #include "Model Loading\texture.h"
 #include "Model Loading\meshLoaderObj.h"
+#include <Physics/BoundingBox.h>
+#include <Player/Projectile.h>
+#include <Logic/GameManager.h>
+#include <Player/Enemy.h>
 
 void processKeyboardInput ();
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
 
-Window window("Game Engine", 800, 800);
+Window window("The Seek of the Grail", 800, 800);
 Camera camera;
+
+//Collision boxes
+BoundingBox playerBox;
+BoundingBox enemyBox;
+GameManager gameManager;
+
+// Projectiles container
+std::vector<Projectile> fireballs;
+// Enemies container
+std::vector<Enemy> enemies;
 
 glm::vec3 lightColor = glm::vec3(1.0f);
 glm::vec3 lightPos = glm::vec3(-180.0f, 100.0f, -200.0f);
@@ -39,38 +53,7 @@ int main()
 	GLuint tex3 = loadBMP("Resources/Textures/orange.bmp");
 
 	glEnable(GL_DEPTH_TEST);
-
-	//Test custom mesh loading
-	std::vector<Vertex> vert;
-	vert.push_back(Vertex());
-	vert[0].pos = glm::vec3(10.5f, 10.5f, 0.0f);
-	vert[0].textureCoords = glm::vec2(1.0f, 1.0f);
-
-	vert.push_back(Vertex());
-	vert[1].pos = glm::vec3(10.5f, -10.5f, 0.0f);
-	vert[1].textureCoords = glm::vec2(1.0f, 0.0f);
-
-	vert.push_back(Vertex());
-	vert[2].pos = glm::vec3(-10.5f, -10.5f, 0.0f);
-	vert[2].textureCoords = glm::vec2(0.0f, 0.0f);
-
-	vert.push_back(Vertex());
-	vert[3].pos = glm::vec3(-10.5f, 10.5f, 0.0f);
-	vert[3].textureCoords = glm::vec2(0.0f, 1.0f);
-
-	vert[0].normals = glm::normalize(glm::cross(vert[1].pos - vert[0].pos, vert[3].pos - vert[0].pos));
-	vert[1].normals = glm::normalize(glm::cross(vert[2].pos - vert[1].pos, vert[0].pos - vert[1].pos));
-	vert[2].normals = glm::normalize(glm::cross(vert[3].pos - vert[2].pos, vert[1].pos - vert[2].pos));
-	vert[3].normals = glm::normalize(glm::cross(vert[0].pos - vert[3].pos, vert[2].pos - vert[3].pos));
-
-	std::vector<int> ind = { 0, 1, 3,   
-		1, 2, 3 };
-
-	std::vector<Texture> textures;
-	textures.push_back(Texture());
-	textures[0].id = tex;
-	textures[0].type = "texture_diffuse";
-
+	
 	std::vector<Texture> textures2;
 	textures2.push_back(Texture());
 	textures2[0].id = tex2;
@@ -88,9 +71,20 @@ int main()
 	// we can add here our textures :)
 	MeshLoaderObj loader;
 	Mesh sun = loader.loadObj("Resources/Models/sphere.obj");
-	Mesh box = loader.loadObj("Resources/Models/cube.obj", textures);
 	Mesh plane = loader.loadObj("Resources/Models/plane.obj", textures2);
 
+	// Initialization
+	// Player
+	playerBox = BoundingBox(camera.getCameraPosition(), glm::vec3(1.0f, 2.0f, 1.0f));
+
+	// Zombi
+	for (int i = 0; i < 5; i++) {
+		// Spawning them in a line for testing
+		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
+		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
+	}
+
+	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
 	//check if we close the window or press the escape button
 	while (!window.isPressed(GLFW_KEY_ESCAPE) &&
 		glfwWindowShouldClose(window.getWindow()) == 0)
@@ -107,6 +101,53 @@ int main()
 		{
 			std::cout << "Pressing mouse button" << std::endl;
 		}
+
+		//Phisics and logic update
+
+		playerBox.update(camera.getCameraPosition() - glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 2.0f, 1.0f));
+
+		for (auto& enemy : enemies) {
+			enemy.update(deltaTime, camera.getCameraPosition());
+		}
+
+		for (auto& ball : fireballs) {
+			ball.update(deltaTime);
+		}
+
+		gameManager.update(camera.getCameraPosition(), enemies);
+		std::cout << gameManager.getCurrentTaskInfo() << std::endl;
+
+		// Check collisions
+
+		for (auto& enemy : enemies) {
+			if (enemy.isDead) continue;
+
+			if (playerBox.checkCollision(enemy.box)) {
+				std::cout << "Merlin collided with an Enemy!" << std::endl;
+				// TODO: Reduce Player Health
+			}
+		}
+
+		
+		for (auto& ball : fireballs) {
+			if (!ball.isActive) continue;
+
+			for (auto& enemy : enemies) {
+				if (enemy.isDead) continue;
+
+				if (ball.box.checkCollision(enemy.box)) {
+					std::cout << "Enemy Hit!" << std::endl;
+
+					// Damage the enemy
+					enemy.takeDamage(50.0f);
+
+					// Destroy the fireball
+					ball.isActive = false;
+					break;
+				}
+			}
+		}
+
 		 //// Code for the light ////
 
 		sunShader.use();
@@ -116,6 +157,8 @@ int main()
 
 		GLuint MatrixID = glGetUniformLocation(sunShader.getId(), "MVP");
 
+		GLuint ObjectColorID = glGetUniformLocation(sunShader.getId(), "objectColor");
+
 		//Test for one Obj loading = light source
 
 		glm::mat4 ModelMatrix = glm::mat4(1.0);
@@ -123,7 +166,53 @@ int main()
 		glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 		glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
+		//White moon
+		glUniform3f(ObjectColorID, 1.0f, 1.0f, 1.0f);
+
 		sun.draw(sunShader);
+
+		// Draw fireballs
+		for (auto& ball : fireballs)
+		{
+			if (ball.isActive)
+			{
+				glm::mat4 ModelMatrix = glm::mat4(1.0);
+				ModelMatrix = glm::translate(ModelMatrix, ball.position);
+				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.2f));
+
+				glm::mat4 MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+				glUniform3f(ObjectColorID, 1.0f, 0.5f, 0.0f);
+
+				sun.draw(sunShader);
+			}
+		}
+
+		//Draw enemies
+
+		for (auto& enemy : enemies)
+		{
+			if (enemy.isDead) continue;
+
+			ModelMatrix = glm::mat4(1.0);
+			ModelMatrix = glm::translate(ModelMatrix, enemy.position);
+
+			// Scale based on enemy type
+			if (enemy.type == EnemyType::BOSS) {
+				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(3.0f)); // Big Boss
+				glUniform3f(ObjectColorID, 0.8f, 0.0f, 0.8f); // Purple Color
+			}
+			else {
+				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.0f)); // Normal Zombie
+				glUniform3f(ObjectColorID, 0.0f, 1.0f, 0.0f); // Green Color
+			}
+
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+			sun.draw(sunShader);
+		}
 
 		//// End code for the light ////
 
@@ -143,7 +232,6 @@ int main()
 		glUniform3f(glGetUniformLocation(shader.getId(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 		glUniform3f(glGetUniformLocation(shader.getId(), "viewPos"), camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-		box.draw(shader);
 
 		///// Test plane Obj file //////
 
@@ -178,8 +266,17 @@ void processKeyboardInput()
 		camera.keyboardMoveRight(cameraSpeed);
 	if (window.isPressed(GLFW_KEY_R))
 		camera.keyboardMoveUp(cameraSpeed);
-	//if (window.isPressed(GLFW_KEY_F))
-	//	camera.keyboardMoveDown(cameraSpeed);
+	// Shooting mechanic
+	static float lastShotTime = 0.0f;
+	float currentTime = glfwGetTime();
+	if (window.isPressed(GLFW_KEY_F) && (currentTime - lastShotTime > 0.5f)) // 0.5s cooldown
+	{
+		// Spawn fireball at camera position, moving in camera direction
+		fireballs.push_back(Projectile(camera.getCameraPosition() - glm::vec3(10.0f, 0.5f, 10.0f), camera.getCameraViewDirection()));
+		lastShotTime = currentTime;
+		std::cout << "Fireball cast!" << std::endl;
+	}
+
 
 	float rotationSpeed = 60 * deltaTime;
 
