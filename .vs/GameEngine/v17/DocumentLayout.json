@@ -1,9 +1,9 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\alexb\\OneDrive\\Escritorio\\Universidad\\Erasmus\\Asignaturas\\ECG\\Project 2 - The seek of the grail\\",
+  "WorkspaceRootPath": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\OneDrive\\Escritorio\\Universidad\\Erasmus\\Asignaturas\\ECG\\Project 2 - The seek of the grail\\GameEngine\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
@@ -20,11 +20,11 @@
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Users\\alexb\\OneDrive\\Escritorio\\Universidad\\Erasmus\\Asignaturas\\ECG\\Project 2 - The seek of the grail\\GameEngine\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\main.cpp",
               "RelativeDocumentMoniker": "GameEngine\\main.cpp",
-              "ToolTip": "C:\\Users\\alexb\\OneDrive\\Escritorio\\Universidad\\Erasmus\\Asignaturas\\ECG\\Project 2 - The seek of the grail\\GameEngine\\main.cpp",
+              "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\main.cpp",
               "RelativeToolTip": "GameEngine\\main.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAACIAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAI0AAAAAAAAAAAAAAJAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-01-19T10:31:42.625Z",
               "EditorCaption": ""

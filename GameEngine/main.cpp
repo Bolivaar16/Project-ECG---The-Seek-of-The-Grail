@@ -32,7 +32,7 @@ int main()
 	//building and compiling shader program
 	Shader shader("Shaders/vertex_shader.glsl", "Shaders/fragment_shader.glsl");
 	Shader sunShader("Shaders/sun_vertex_shader.glsl", "Shaders/sun_fragment_shader.glsl");
-
+	
 	//Textures
 	GLuint tex = loadBMP("Resources/Textures/wood.bmp");
 	GLuint tex2 = loadBMP("Resources/Textures/rock.bmp");
@@ -178,8 +178,8 @@ void processKeyboardInput()
 		camera.keyboardMoveRight(cameraSpeed);
 	if (window.isPressed(GLFW_KEY_R))
 		camera.keyboardMoveUp(cameraSpeed);
-	if (window.isPressed(GLFW_KEY_F))
-		camera.keyboardMoveDown(cameraSpeed);
+	//if (window.isPressed(GLFW_KEY_F))
+	//	camera.keyboardMoveDown(cameraSpeed);
 
 	float rotationSpeed = 60 * deltaTime;
 
