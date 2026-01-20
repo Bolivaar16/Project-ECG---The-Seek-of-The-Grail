@@ -1,0 +1,29 @@
+﻿  camera.cpp
+  window.cpp
+C:\Users\sergi\Escritorio\Carpeta\Universidad\Erasmus\Primer cuatrimestre\EGC\GameEngine2025 (1)\GameEngine2025\GameEngine\GameEngine\Camera\camera.h(3,10): error C1083: No se puede abrir el archivo incluir: 'glm.hpp': No such file or directory
+  (compilando archivo de origen "Camera/camera.cpp")
+  
+C:\Users\sergi\Escritorio\Carpeta\Universidad\Erasmus\Primer cuatrimestre\EGC\GameEngine2025 (1)\GameEngine2025\GameEngine\GameEngine\Graphics\window.h(2,10): error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  (compilando archivo de origen "Graphics/window.cpp")
+  
+  main.cpp
+C:\Users\sergi\Escritorio\Carpeta\Universidad\Erasmus\Primer cuatrimestre\EGC\GameEngine2025 (1)\GameEngine2025\GameEngine\GameEngine\Graphics\window.h(2,10): error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  (compilando archivo de origen "main.cpp")
+  
+  meshLoaderObj.cpp
+C:\Users\sergi\Escritorio\Carpeta\Universidad\Erasmus\Primer cuatrimestre\EGC\GameEngine2025 (1)\GameEngine2025\GameEngine\GameEngine\Model Loading\meshLoaderObj.h(4,10): error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  (compilando archivo de origen "Model%20Loading/meshLoaderObj.cpp")
+  
+  mesh.cpp
+C:\Users\sergi\Escritorio\Carpeta\Universidad\Erasmus\Primer cuatrimestre\EGC\GameEngine2025 (1)\GameEngine2025\GameEngine\GameEngine\Model Loading\mesh.h(2,10): error C1083: No se puede abrir el archivo incluir: 'glm.hpp': No such file or directory
+  (compilando archivo de origen "Model%20Loading/mesh.cpp")
+  
+  shader.cpp
+C:\Users\sergi\Escritorio\Carpeta\Universidad\Erasmus\Primer cuatrimestre\EGC\GameEngine2025 (1)\GameEngine2025\GameEngine\GameEngine\Shaders\shader.h(3,10): error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  (compilando archivo de origen "Shaders/shader.cpp")
+  
+  texture.cpp
+C:\Users\sergi\Escritorio\Carpeta\Universidad\Erasmus\Primer cuatrimestre\EGC\GameEngine2025 (1)\GameEngine2025\GameEngine\GameEngine\Model Loading\texture.h(2,10): error C1083: No se puede abrir el archivo incluir: 'glew.h': No such file or directory
+  (compilando archivo de origen "Model%20Loading/texture.cpp")
+  
+  Generando código...
