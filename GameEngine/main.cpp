@@ -12,8 +12,11 @@
 #include "Resources/Imgui/imgui_impl_glfw.h"
 #include "Resources/Imgui/imgui_impl_opengl3.h"
 #include <Player/QuestItem.h>
+#include <../glm/gtc/matrix_transform.hpp>
+#include <../glm/gtc/type_ptr.hpp>
+#include <../glm/glm.hpp>
 
-void processKeyboardInput ();
+void processKeyboardInput();
 
 float deltaTime = 0.0f;	// time between current frame and last frame
 float lastFrame = 0.0f;
@@ -49,7 +52,7 @@ std::vector<glm::vec3> ruinsPositions = {
 
 void resetGame() {
 	std::cout << "Restarting Game..." << std::endl;
-	
+
 	gameManager = GameManager();
 
 	camera = Camera();
@@ -61,12 +64,15 @@ void resetGame() {
 	}
 	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
 	staff = QuestItem(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
-	staff.isActive = true; 
+	staff.isActive = true;
 	staff.isCollected = false;
 	grail = QuestItem(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-	grail.isActive = false;  
+	grail.isActive = false;
 	grail.isCollected = false;
 	fireballs.clear();
+
+	lastFrame = glfwGetTime();
+	deltaTime = 0.0f;
 }
 
 int main()
@@ -76,7 +82,7 @@ int main()
 	//building and compiling shader program
 	Shader shader("Shaders/vertex_shader.glsl", "Shaders/fragment_shader.glsl");
 	Shader sunShader("Shaders/sun_vertex_shader.glsl", "Shaders/sun_fragment_shader.glsl");
-	
+
 	//Textures
 	GLuint tex = loadBMP("Resources/Textures/wood.bmp");
 	GLuint tex2 = loadBMP("Resources/Textures/rock.bmp");
@@ -94,7 +100,7 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 400");
 
-	
+
 	std::vector<Texture> textures2;
 	textures2.push_back(Texture());
 	textures2[0].id = tex2;
@@ -134,10 +140,9 @@ int main()
 		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
 	}*/
-	
+
 	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
 
-	
 	//check if we close the window or press the escape button
 	while (!window.isPressed(GLFW_KEY_ESCAPE) &&
 		glfwWindowShouldClose(window.getWindow()) == 0)
@@ -205,13 +210,15 @@ int main()
 				}
 			}
 		}
-		else if (gameManager.isGameOver || gameManager.gameFinished) { // Added gameFinished to allow restart on win too
+		else if (gameManager.isGameOver || gameManager.gameFinished) {
 
 			static bool enterPressedLastFrame = false;
 			bool enterPressedNow = window.isPressed(GLFW_KEY_ENTER);
 
 			if (enterPressedNow && !enterPressedLastFrame) {
 				resetGame();
+				lastFrame = glfwGetTime();
+				deltaTime = 0.0f;
 			}
 
 			enterPressedLastFrame = enterPressedNow;
@@ -228,7 +235,7 @@ int main()
 			}
 		}
 
-		
+
 		for (auto& ball : fireballs) {
 			if (!ball.isActive && staff.isCollected) continue;
 
@@ -248,7 +255,7 @@ int main()
 			}
 		}
 
-		 //// Code for the light ////
+		//// Code for the light ////
 
 		sunShader.use();
 
@@ -274,7 +281,7 @@ int main()
 		// Draw fireballs
 		for (auto& ball : fireballs)
 		{
-			if (ball.isActive&& staff.isCollected)
+			if (ball.isActive && staff.isCollected)
 			{
 				glm::mat4 ModelMatrix = glm::mat4(1.0);
 				ModelMatrix = glm::translate(ModelMatrix, ball.position);
@@ -331,9 +338,7 @@ int main()
 		glUniform3f(glGetUniformLocation(shader.getId(), "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 		glUniform3f(glGetUniformLocation(shader.getId(), "viewPos"), camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
 
-
-		///// Test plane Obj file //////
-
+		///// Plane
 		ModelMatrix = glm::mat4(1.0);
 		ModelMatrix = glm::translate(ModelMatrix, glm::vec3(0.0f, -20.0f, 0.0f));
 		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(100.0f, 1.0f, 100.0f));
@@ -352,10 +357,16 @@ int main()
 
 			ModelMatrix = glm::mat4(1.0);
 
-			ModelMatrix = glm::translate(ModelMatrix, enemy.position);
-			
-			ModelMatrix = glm::rotate(ModelMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+			glm::vec3 adjustedPos = enemy.position;
+			adjustedPos.y -= 20.0f;
 
+			ModelMatrix = glm::translate(ModelMatrix, adjustedPos);
+
+			ModelMatrix = glm::rotate(ModelMatrix, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+			glm::vec3 direction = glm::normalize(camera.getCameraPosition() - enemy.position);
+			float angle = atan2(direction.x, direction.z);
+			ModelMatrix = glm::rotate(ModelMatrix, angle * 50, glm::vec3(0.0f, 0.0f, 1.0f));
 
 			if (enemy.type == EnemyType::BOSS) {
 				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(30.0f));
