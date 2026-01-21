@@ -29,6 +29,25 @@ BoundingBox playerBox;
 BoundingBox enemyBox;
 GameManager gameManager;
 
+struct Castle {
+	glm::vec3 position;
+	BoundingBox box;
+
+	Castle() {}
+	Castle(glm::vec3 pos, glm::vec3 size) {
+		position = pos;
+		box = BoundingBox(pos, size);
+	}
+};
+
+Castle castle;
+
+//Meshes
+Mesh tree;
+Mesh rock;
+Mesh pillar;
+Mesh castleMesh;
+
 //Flags
 bool bossHasSpawned = false;
 bool grailLanded = false;
@@ -38,12 +57,12 @@ std::vector<Projectile> fireballs;
 // Enemies container
 std::vector<Enemy> enemies;
 //Quest Items
-QuestItem staff(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
-QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+QuestItem staff(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(3.0f, 3.0f, 3.0f));
+QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(2.0f, 2.0f, 2.0f));
 glm::vec3 bossDeathPosition;
 
 glm::vec3 lightColor = glm::vec3(1.0f);
-glm::vec3 lightPos = glm::vec3(-180.0f, 100.0f, -200.0f);
+glm::vec3 lightPos = glm::vec3(-180.0f, 500.0f, -200.0f);
 
 std::vector<glm::vec3> ruinsPositions = {
 	glm::vec3(5.0f, 0.0f,  5.0f),
@@ -81,12 +100,78 @@ void resetGame() {
 	grail.isActive = false;
 	grail.isCollected = false;
 
+	castle = Castle(glm::vec3(0.0f, -20.0f, 225.0f), glm::vec3(100.0f, 300.0f, 100.0f));
+
 	fireballs.clear();
 
 	lastFrame = glfwGetTime();
 	deltaTime = 0.0f;
 	gameManager.isGameOver = false;
 }
+
+std::vector<glm::vec3> mountainsPositions = {
+	glm::vec3(1200.0f, -20.5f,  1200.0f),
+	glm::vec3(-1200.0f, -20.5f,  1200.0f),
+	glm::vec3(-1500.0f, -20.5f, -1500.0f),
+	glm::vec3(1500.0f, -20.5f, -1300.0f),
+	glm::vec3(700.0f, -20.5f, -1700.0f),
+	glm::vec3(900.0f, -20.5f,  2200.0f)
+};
+
+glm::vec3 treePos[] = {
+	glm::vec3(150.0f, -20.0f, 150.0f),
+	glm::vec3(-200.0f, -20.0f, -100.0f),
+	glm::vec3(250.0f, -20.0f, -250.0f),
+	glm::vec3(100.0f, -20.0f,  400.0f),
+	glm::vec3(560.0f, -20.0f,   100.0f),
+	glm::vec3(-300.0f, -20.0f,  360.0f),
+	glm::vec3(-560.0f, -20.0f,  500.0f),
+	glm::vec3(-160.0f, -20.0f,   160.0f),
+	glm::vec3(-400.0f, -20.0f, -600.0f),
+	glm::vec3(-600.0f, -20.0f, -594.0f),
+	glm::vec3(453.0f, -20.0f, -533.0f),
+	glm::vec3(500.0f, -20.0f, -600.0f),
+	glm::vec3(0.0f, -20.0f, -320.0f),
+	glm::vec3(320.0f, -20.0f,  320.0f),
+	glm::vec3(-300.0f, -20.0f,   20.0f)
+};
+
+glm::vec3 rocksPositions[] = {
+	// Esquinas lejanas
+				glm::vec3(500.0f, -20.5f,  500.0f),
+				glm::vec3(-550.0f, -20.5f,  450.0f),
+				glm::vec3(-600.0f, -20.5f, -600.0f),
+				glm::vec3(650.0f, -20.5f, -550.0f),
+
+				// Puntos cardinales lejanos
+				glm::vec3(0.0f, -20.5f,  800.0f),
+				glm::vec3(800.0f, -20.5f,    0.0f),
+				glm::vec3(-750.0f, -20.5f,  -50.0f),
+				glm::vec3(100.0f, -20.5f, -700.0f),
+
+				// --- NUEVAS (Para rellenar huecos) ---
+				// Zona Norte
+				glm::vec3(400.0f, -20.5f,  750.0f),
+				glm::vec3(-350.0f, -20.5f,  700.0f),
+
+				// Zona Sur
+				glm::vec3(450.0f, -20.5f, -750.0f),
+				glm::vec3(-450.0f, -20.5f, -650.0f),
+
+				// Zona Este
+				glm::vec3(750.0f, -20.5f,  300.0f),
+				glm::vec3(850.0f, -20.5f, -300.0f),
+
+				// Zona Oeste
+				glm::vec3(-800.0f, -20.5f,  300.0f),
+				glm::vec3(-700.0f, -20.5f, -300.0f),
+
+				// Extras aleatorias
+				glm::vec3(600.0f, -20.5f,  100.0f),
+				glm::vec3(-600.0f, -20.5f,  100.0f),
+				glm::vec3(100.0f, -20.5f,  600.0f),
+				glm::vec3(-100.0f, -20.5f, -600.0f)
+};
 
 int main()
 {
@@ -100,6 +185,9 @@ int main()
 	GLuint tex = loadBMP("Resources/Textures/wood.bmp");
 	GLuint tex2 = loadBMP("Resources/Textures/rock.bmp");
 	GLuint tex3 = loadBMP("Resources/Textures/orange.bmp");
+	GLuint tex4 = loadBMP("Resources/Textures/rock_real.bmp");
+	GLuint tex5 = loadBMP("Resources/Textures/black.bmp");
+	GLuint tex6 = loadBMP("Resources/Textures/castle.bmp");
 	GLuint texZombie = loadBMP("Resources/Textures/zombi.bmp");
 	GLuint texGrail = loadBMP("Resources/Textures/Grail_Grail_BaseColor.bmp");
 
@@ -125,6 +213,21 @@ int main()
 	textures3[0].id = tex3;
 	textures3[0].type = "texture_diffuse";
 
+	std::vector<Texture> textures4;
+	textures4.push_back(Texture());
+	textures4[0].id = tex4;
+	textures4[0].type = "texture_diffuse";
+
+	std::vector<Texture> textures5;
+	textures5.push_back(Texture());
+	textures5[0].id = tex5;
+	textures5[0].type = "texture_diffuse";
+
+	std::vector<Texture> textures6;
+	textures6.push_back(Texture());
+	textures6[0].id = tex6;
+	textures6[0].type = "texture_diffuse";
+
 	std::vector<Texture> zombieTextures;
 	zombieTextures.push_back(Texture());
 	zombieTextures[0].id = texZombie;
@@ -138,11 +241,12 @@ int main()
 
 	//Mesh mesh(vert, ind, textures3);
 
-	// Create Obj files - easier :)
-	// we can add here our textures :)
 	MeshLoaderObj loader;
 	Mesh sun = loader.loadObj("Resources/Models/sphere.obj");
 	Mesh plane = loader.loadObj("Resources/Models/plane.obj", textures2);
+	Mesh realRock = loader.loadObj("Resources/Models/rock_real.obj", textures4);
+	Mesh deadTree = loader.loadObj("Resources/Models/dead_tree.obj", textures5);
+	Mesh castleMesh = loader.loadObj("Resources/Models/castle.obj", textures6);
 	Mesh zombieMesh = loader.loadObj("Resources/Models/zombi.obj", zombieTextures);
 	Mesh grailMesh = loader.loadObj("Resources/Models/Grail.obj", grailTextures);
 
@@ -154,14 +258,18 @@ int main()
 	grail.isActive = false;
 
 	// Zombi
-	
+
 	for (int i = 0; i < 5; i++) {
 		// Spawning them in a line for testing
-		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
+		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, 0.0f);
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
 	}
 
 	//enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
+
+	//Castle
+	castle = Castle(glm::vec3(0.0f, -20.0f, 225.0f), glm::vec3(100.0f, 300.0f, 100.0f));
+
 
 	//check if we close the window or press the escape button
 	while (!window.isPressed(GLFW_KEY_ESCAPE) &&
@@ -214,11 +322,11 @@ int main()
 			}
 
 			if (grail.isActive && !grailLanded) {
-				float descentSpeed = 5.0f;
+				float descentSpeed = 50.0f;
 				grail.position.y -= descentSpeed * deltaTime;
 
-				if (grail.position.y <= 20.0f) {
-					grail.position.y = 20.0f;
+				if (grail.position.y <= 3.0f) {
+					grail.position.y = 3.0f;
 					grailLanded = true;
 				}
 			}
@@ -248,6 +356,18 @@ int main()
 					gameManager.tasks[3].isCompleted = true;
 
 					gameManager.grailSpawned = false;
+				}
+			}
+
+			//Castle Collision
+			if (grail.isCollected && playerBox.checkCollision(castle.box)) {
+
+				// Check if we are on the final mission (Index 4)
+				if (gameManager.currentTaskIndex == 4) {
+					std::cout << "Victory! Returned to Camelot." << std::endl;
+
+					gameManager.tasks[4].isCompleted = true;
+					gameManager.gameFinished = true;
 				}
 			}
 		}
@@ -356,47 +476,37 @@ int main()
 
 		// Draw Grail
 		if (grail.isActive) {
-			// 1. Calcular posición visual
 			glm::vec3 drawPos = grail.position;
 
-			// Si ya aterrizó, aplicamos la flotación (Seno)
 			if (grailLanded) {
 				float time = glfwGetTime();
 				drawPos.y += sin(time * 2.0f) * 0.5f;
 			}
 
-			// 2. Dibujar el Grial
 			ModelMatrix = glm::mat4(1.0);
 			ModelMatrix = glm::translate(ModelMatrix, drawPos);
 			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.5f));
 			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-			glUniform3f(ObjectColorID, 1.0f, 0.84f, 0.0f); // Dorado
-			sun.draw(sunShader);
+			glUniform3f(ObjectColorID, 1.0f, 0.84f, 0.0f);
+			grailMesh.draw(shader);
 
-			// 3. EFECTO: Rayos de luz sagrada (Holy Glow)
-			// Dibujamos 8 rayos girando alrededor del grial
 			float rayTime = glfwGetTime();
 			for (int i = 0; i < 8; i++) {
 				glm::mat4 RayMatrix = glm::mat4(1.0);
-				RayMatrix = glm::translate(RayMatrix, drawPos); // Centrado en el grial
+				RayMatrix = glm::translate(RayMatrix, drawPos);
 
-				// Rotación continua en el eje Y
-				float angleY = (rayTime * 50.0f) + (i * 45.0f);
+				float angleY = (rayTime * 50.0f) + (i * 60.0f);
 				RayMatrix = glm::rotate(RayMatrix, glm::radians(angleY), glm::vec3(0.0f, 1.0f, 0.0f));
 
-				// Inclinación para dar forma de estrella/explosión (45 grados)
-				// Alternamos arriba y abajo para más variedad
 				float angleX = (i % 2 == 0) ? 45.0f : -45.0f;
 				RayMatrix = glm::rotate(RayMatrix, glm::radians(angleX), glm::vec3(1.0f, 0.0f, 0.0f));
 
-				// Escalado: Muy finos y largos (simulando rayos de luz)
 				RayMatrix = glm::scale(RayMatrix, glm::vec3(0.02f, 0.02f, 2.5f));
 
 				MVP = ProjectionMatrix * ViewMatrix * RayMatrix;
 				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-				// Color amarillo pálido brillante
 				glUniform3f(ObjectColorID, 1.0f, 1.0f, 0.6f);
 				sun.draw(sunShader);
 			}
@@ -505,8 +615,75 @@ int main()
 		ImGui::End();
 
 		//Render ImGui data onto the screen
+		glDisable(GL_DEPTH_TEST);
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		glEnable(GL_DEPTH_TEST);
+
+		for (int i = 0; i < mountainsPositions.size(); i++)
+		{
+			ModelMatrix = glm::mat4(1.0);
+			ModelMatrix = glm::translate(ModelMatrix, mountainsPositions[i]);
+			// Escala normal/pequeña para obstaculos
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(300.5f, 300.5f, 300.5f));
+
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+			glUniformMatrix4fv(MatrixID2, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+
+			realRock.draw(shader);
+		}
+
+
+		for (int i = 0; i < 15; i++)
+		{
+			ModelMatrix = glm::mat4(1.0);
+			ModelMatrix = glm::translate(ModelMatrix, treePos[i]);
+
+			// Escala x2 (ajusta si se ve muy grande o chico)
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(20.0f, 20.0f, 20.0f));
+
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+			glUniformMatrix4fv(MatrixID2, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+
+			// Dibujamos el árbol tal cual
+			deadTree.draw(shader);
+		}
+
+		//CASTLE
+		ModelMatrix = glm::mat4(1.0);
+		ModelMatrix = glm::translate(ModelMatrix, castle.position);
+
+		ModelMatrix = glm::scale(ModelMatrix, glm::vec3(40.0f, 60.0f, 20.0f));
+
+		MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+		glUniformMatrix4fv(MatrixID2, 1, GL_FALSE, &MVP[0][0]);
+		glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+
+		castleMesh.draw(shader);
+
+		for (int i = 0; i < 8; i++)
+		{
+			ModelMatrix = glm::mat4(1.0);
+			ModelMatrix = glm::translate(ModelMatrix, rocksPositions[i]);
+
+			float scaleSize = (i % 2 == 0) ? 90.0f : 45.0f;
+
+			if (i % 3 == 0) scaleSize = 25.0f;
+
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(scaleSize, scaleSize, scaleSize));
+
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+
+			glUniformMatrix4fv(MatrixID2, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+
+			realRock.draw(shader);
+		}
 
 		window.update();
 	}

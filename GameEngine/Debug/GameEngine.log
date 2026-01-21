@@ -1,8 +1,9 @@
 ﻿  main.cpp
-C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(86,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(171,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(261,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(364,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(379,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(536,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(107,25): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(279,22): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(381,28): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(482,16): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(494,18): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(623,21): warning C4018: '<': signed/unsigned mismatch
+C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\GameEngine\main.cpp(713,20): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   GameEngine.vcxproj -> C:\Users\alexb\Proyectos\Project 2 - The seek of the grail\Project-ECG---The-Seek-of-The-Grail\Debug\GameEngine.exe
