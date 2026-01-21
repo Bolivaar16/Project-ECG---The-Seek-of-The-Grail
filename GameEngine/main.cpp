@@ -29,6 +29,10 @@ BoundingBox playerBox;
 BoundingBox enemyBox;
 GameManager gameManager;
 
+//Flags
+bool bossHasSpawned = false;
+bool grailLanded = false;
+
 // Projectiles container
 std::vector<Projectile> fireballs;
 // Enemies container
@@ -36,7 +40,7 @@ std::vector<Enemy> enemies;
 //Quest Items
 QuestItem staff(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
 QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-
+glm::vec3 bossDeathPosition;
 
 glm::vec3 lightColor = glm::vec3(1.0f);
 glm::vec3 lightPos = glm::vec3(-180.0f, 100.0f, -200.0f);
@@ -54,25 +58,34 @@ void resetGame() {
 	std::cout << "Restarting Game..." << std::endl;
 
 	gameManager = GameManager();
-
 	camera = Camera();
 
+	// 1. Reset Enemies
 	enemies.clear();
+
+	// Spawn ONLY the zombies initially
 	for (int i = 0; i < 5; i++) {
-		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
+		glm::vec3 pos = glm::vec3(-10.0f + (i * 5.0f), 0.0f, -15.0f + (i * 2.0f));
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
 	}
-	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
+
+	bossHasSpawned = false;
+	grailLanded = false;
+
+	// 2. Reset Quest Items
 	staff = QuestItem(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
 	staff.isActive = true;
 	staff.isCollected = false;
+
 	grail = QuestItem(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 	grail.isActive = false;
 	grail.isCollected = false;
+
 	fireballs.clear();
 
 	lastFrame = glfwGetTime();
 	deltaTime = 0.0f;
+	gameManager.isGameOver = false;
 }
 
 int main()
@@ -88,6 +101,7 @@ int main()
 	GLuint tex2 = loadBMP("Resources/Textures/rock.bmp");
 	GLuint tex3 = loadBMP("Resources/Textures/orange.bmp");
 	GLuint texZombie = loadBMP("Resources/Textures/zombi.bmp");
+	GLuint texGrail = loadBMP("Resources/Textures/Grail_Grail_BaseColor.bmp");
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -116,6 +130,11 @@ int main()
 	zombieTextures[0].id = texZombie;
 	zombieTextures[0].type = "texture_diffuse";
 
+	std::vector<Texture> grailTextures;
+	grailTextures.push_back(Texture());
+	grailTextures[0].id = texGrail;
+	grailTextures[0].type = "texture_diffuse";
+
 
 	//Mesh mesh(vert, ind, textures3);
 
@@ -125,6 +144,7 @@ int main()
 	Mesh sun = loader.loadObj("Resources/Models/sphere.obj");
 	Mesh plane = loader.loadObj("Resources/Models/plane.obj", textures2);
 	Mesh zombieMesh = loader.loadObj("Resources/Models/zombi.obj", zombieTextures);
+	Mesh grailMesh = loader.loadObj("Resources/Models/Grail.obj", grailTextures);
 
 	// Initialization
 	// Player
@@ -134,14 +154,14 @@ int main()
 	grail.isActive = false;
 
 	// Zombi
-	/*
+	
 	for (int i = 0; i < 5; i++) {
 		// Spawning them in a line for testing
 		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
-	}*/
+	}
 
-	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
+	//enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
 
 	//check if we close the window or press the escape button
 	while (!window.isPressed(GLFW_KEY_ESCAPE) &&
@@ -174,12 +194,33 @@ int main()
 			}
 
 			gameManager.update(camera.getCameraPosition(), enemies);
+			if (gameManager.currentTaskIndex == 2 && !bossHasSpawned) {
 
+				std::cout << "THE BOSS HAS AWAKENED!" << std::endl;
+
+				// Spawn the Boss at a specific location
+				enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
+
+				bossHasSpawned = true; // Lock so we don't spawn him infinitely
+			}
 			// --- QUEST LOGIC UPDATE ---
 
-			// 1. Sync Grail visibility with GameManager
 			if (gameManager.grailSpawned && !grail.isCollected) {
-				grail.isActive = true;
+				if (!grail.isActive) {
+					grail.isActive = true;
+					grail.position.y = 200.0f;
+					grailLanded = false;
+				}
+			}
+
+			if (grail.isActive && !grailLanded) {
+				float descentSpeed = 5.0f;
+				grail.position.y -= descentSpeed * deltaTime;
+
+				if (grail.position.y <= 20.0f) {
+					grail.position.y = 20.0f;
+					grailLanded = true;
+				}
 			}
 
 			// --- QUEST ITEM COLLISIONS ---
@@ -197,7 +238,7 @@ int main()
 			}
 
 			// Grail Collision
-			if (grail.isActive && playerBox.checkCollision(grail.box)) {
+			if (grail.isActive && grailLanded && playerBox.checkCollision(grail.box)) {
 				std::cout << "Holy Grail collected!" << std::endl;
 
 				grail.isCollected = true;
@@ -247,6 +288,9 @@ int main()
 
 					// Damage the enemy
 					enemy.takeDamage(50.0f);
+					if (enemy.type == EnemyType::BOSS && enemy.isDead) {
+						bossDeathPosition = enemy.position;
+					}
 
 					// Destroy the fireball
 					ball.isActive = false;
@@ -312,13 +356,50 @@ int main()
 
 		// Draw Grail
 		if (grail.isActive) {
+			// 1. Calcular posición visual
+			glm::vec3 drawPos = grail.position;
+
+			// Si ya aterrizó, aplicamos la flotación (Seno)
+			if (grailLanded) {
+				float time = glfwGetTime();
+				drawPos.y += sin(time * 2.0f) * 0.5f;
+			}
+
+			// 2. Dibujar el Grial
 			ModelMatrix = glm::mat4(1.0);
-			ModelMatrix = glm::translate(ModelMatrix, grail.position);
+			ModelMatrix = glm::translate(ModelMatrix, drawPos);
 			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.5f));
 			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
 			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-			glUniform3f(ObjectColorID, 1.0f, 0.84f, 0.0f);
+			glUniform3f(ObjectColorID, 1.0f, 0.84f, 0.0f); // Dorado
 			sun.draw(sunShader);
+
+			// 3. EFECTO: Rayos de luz sagrada (Holy Glow)
+			// Dibujamos 8 rayos girando alrededor del grial
+			float rayTime = glfwGetTime();
+			for (int i = 0; i < 8; i++) {
+				glm::mat4 RayMatrix = glm::mat4(1.0);
+				RayMatrix = glm::translate(RayMatrix, drawPos); // Centrado en el grial
+
+				// Rotación continua en el eje Y
+				float angleY = (rayTime * 50.0f) + (i * 45.0f);
+				RayMatrix = glm::rotate(RayMatrix, glm::radians(angleY), glm::vec3(0.0f, 1.0f, 0.0f));
+
+				// Inclinación para dar forma de estrella/explosión (45 grados)
+				// Alternamos arriba y abajo para más variedad
+				float angleX = (i % 2 == 0) ? 45.0f : -45.0f;
+				RayMatrix = glm::rotate(RayMatrix, glm::radians(angleX), glm::vec3(1.0f, 0.0f, 0.0f));
+
+				// Escalado: Muy finos y largos (simulando rayos de luz)
+				RayMatrix = glm::scale(RayMatrix, glm::vec3(0.02f, 0.02f, 2.5f));
+
+				MVP = ProjectionMatrix * ViewMatrix * RayMatrix;
+				glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+				// Color amarillo pálido brillante
+				glUniform3f(ObjectColorID, 1.0f, 1.0f, 0.6f);
+				sun.draw(sunShader);
+			}
 		}
 
 

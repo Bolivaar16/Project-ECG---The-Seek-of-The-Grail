@@ -78,7 +78,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
@@ -118,27 +118,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "GameManager.cpp",
-              "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp",
-              "RelativeDocumentMoniker": "GameEngine\\Source\\Logic\\GameManager.cpp",
-              "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp",
-              "RelativeToolTip": "GameEngine\\Source\\Logic\\GameManager.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHkAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-20T16:50:00.914Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\main.cpp",
               "RelativeDocumentMoniker": "GameEngine\\main.cpp",
               "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\main.cpp",
               "RelativeToolTip": "GameEngine\\main.cpp",
-              "ViewState": "AgIAAGQBAAAAAAAAAAAkwG0BAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAwCAAAAAAAAAADwvywCAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-01-19T10:31:42.625Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GameManager.cpp",
+              "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp",
+              "RelativeDocumentMoniker": "GameEngine\\Source\\Logic\\GameManager.cpp",
+              "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp",
+              "RelativeToolTip": "GameEngine\\Source\\Logic\\GameManager.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFQAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-01-20T16:50:00.914Z",
               "EditorCaption": ""
             },
             {

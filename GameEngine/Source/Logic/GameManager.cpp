@@ -61,27 +61,38 @@ void GameManager::update(glm::vec3 playerPos, std::vector<Enemy>& enemies) {
     // MISSION 1 LOGIC: Go to the rocks
     if (currentTaskIndex == 0) {
         // Let's say the rocks are at (10, 0, 10)
-        if (glm::distance(playerPos, glm::vec3(10.0f, 0.0f, 10.0f)) < 3.0f) {
+        if (glm::distance(playerPos, glm::vec3(10.0f, 0.0f, 100.0f)) < 5.0f) {
             current.isCompleted = true;
         }
     }
     // MISSION 2 LOGIC: Count kills
     else if (currentTaskIndex == 1) {
         int deadCount = 0;
-        // Count how many of the first 5 zombies are dead
-        // (Assuming the first 5 in the vector are the normal ones)
-        for (int i = 0; i < 5 && i < enemies.size(); i++) {
-            if (enemies[i].isDead) deadCount++;
+        for (const auto& enemy : enemies) {
+            if (enemy.type == EnemyType::ZOMBIE && enemy.isDead) {
+                deadCount++;
+            }
         }
         current.currentKills = deadCount;
-        if (deadCount >= current.requiredKills) current.isCompleted = true;
+        if (deadCount >= current.requiredKills) {
+            current.isCompleted = true;
+            std::cout << "Mission 2 Completed: Zombies purged." << std::endl;
+        }
     }
     // MISSION 3 LOGIC: The Boss
     else if (currentTaskIndex == 2) {
-        // Assuming the Boss is enemy number 6 (index 5)
-        if (enemies.size() > 5 && enemies[5].isDead) {
+        bool bossIsDead = false;
+        for (const auto& enemy : enemies) {
+            if (enemy.type == EnemyType::BOSS && enemy.isDead) {
+                bossIsDead = true;
+                break;
+            }
+        }
+
+        if (bossIsDead) {
             current.isCompleted = true;
-            grailSpawned = true; // The Grail appears!
+            grailSpawned = true; // Trigger Grail spawn
+            std::cout << "Mission 3 Completed: Boss defeated." << std::endl;
         }
     }
     // MISSION 4 LOGIC: Pick up Grail
