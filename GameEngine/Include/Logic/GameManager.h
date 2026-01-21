@@ -25,6 +25,7 @@ public:
     bool gameFinished;
     bool grailSpawned;
     glm::vec3 grailPosition;
+    bool isGameOver;
 
     // Constructor
     GameManager();

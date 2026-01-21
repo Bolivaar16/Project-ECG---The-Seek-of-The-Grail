@@ -34,6 +34,7 @@ std::vector<Enemy> enemies;
 QuestItem staff(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
 QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
 
+
 glm::vec3 lightColor = glm::vec3(1.0f);
 glm::vec3 lightPos = glm::vec3(-180.0f, 100.0f, -200.0f);
 
@@ -45,6 +46,28 @@ std::vector<glm::vec3> ruinsPositions = {
 	glm::vec3(0.0f, 0.0f, -10.0f),
 	glm::vec3(2.0f, 0.0f,  15.0f)
 };
+
+void resetGame() {
+	std::cout << "Restarting Game..." << std::endl;
+	
+	gameManager = GameManager();
+
+	camera = Camera();
+
+	enemies.clear();
+	for (int i = 0; i < 5; i++) {
+		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
+		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
+	}
+	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
+	staff = QuestItem(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+	staff.isActive = true; 
+	staff.isCollected = false;
+	grail = QuestItem(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	grail.isActive = false;  
+	grail.isCollected = false;
+	fireballs.clear();
+}
 
 int main()
 {
@@ -58,6 +81,7 @@ int main()
 	GLuint tex = loadBMP("Resources/Textures/wood.bmp");
 	GLuint tex2 = loadBMP("Resources/Textures/rock.bmp");
 	GLuint tex3 = loadBMP("Resources/Textures/orange.bmp");
+	GLuint texZombie = loadBMP("Resources/Textures/zombi.bmp");
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -70,9 +94,6 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 400");
 
-	//Initialize ImGui Backends
-	//ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
-	//ImGui_ImplOpenGL3_Init("#version 400");
 	
 	std::vector<Texture> textures2;
 	textures2.push_back(Texture());
@@ -84,6 +105,11 @@ int main()
 	textures3[0].id = tex3;
 	textures3[0].type = "texture_diffuse";
 
+	std::vector<Texture> zombieTextures;
+	zombieTextures.push_back(Texture());
+	zombieTextures[0].id = texZombie;
+	zombieTextures[0].type = "texture_diffuse";
+
 
 	//Mesh mesh(vert, ind, textures3);
 
@@ -92,20 +118,22 @@ int main()
 	MeshLoaderObj loader;
 	Mesh sun = loader.loadObj("Resources/Models/sphere.obj");
 	Mesh plane = loader.loadObj("Resources/Models/plane.obj", textures2);
+	Mesh zombieMesh = loader.loadObj("Resources/Models/zombi.obj", zombieTextures);
 
 	// Initialization
 	// Player
-	playerBox = BoundingBox(camera.getCameraPosition(), glm::vec3(10.0f, 20.0f, 10.0f));
+	playerBox = BoundingBox(camera.getCameraPosition(), glm::vec3(100.0f, 200.0f, 100.0f));
 
 	//Grail
 	grail.isActive = false;
 
 	// Zombi
+	/*
 	for (int i = 0; i < 5; i++) {
 		// Spawning them in a line for testing
 		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, -15.0f);
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
-	}
+	}*/
 	
 	enemies.push_back(Enemy(glm::vec3(0.0f, 0.0f, -30.0f), EnemyType::BOSS));
 
@@ -119,63 +147,74 @@ int main()
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		processKeyboardInput();
+		if (!gameManager.isGameOver && !gameManager.gameFinished) {
+			processKeyboardInput();
 
-		//test mouse input
-		if (window.isMousePressed(GLFW_MOUSE_BUTTON_LEFT))
-		{
-			std::cout << "Pressing mouse button" << std::endl;
-		}
+			//test mouse input
+			if (window.isMousePressed(GLFW_MOUSE_BUTTON_LEFT))
+			{
+				std::cout << "Pressing mouse button" << std::endl;
+			}
 
-		//Phisics and logic update
+			//Phisics and logic update
 
-		playerBox.update(camera.getCameraPosition() - glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 2.0f, 1.0f));
+			playerBox.update(camera.getCameraPosition() - glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 2.0f, 1.0f));
 
-		for (auto& enemy : enemies) {
-			enemy.update(deltaTime, camera.getCameraPosition());
-		}
+			for (auto& enemy : enemies) {
+				enemy.update(deltaTime, camera.getCameraPosition());
+			}
 
-		for (auto& ball : fireballs) {
-			ball.update(deltaTime);
-		}
+			for (auto& ball : fireballs) {
+				ball.update(deltaTime);
+			}
 
-		gameManager.update(camera.getCameraPosition(), enemies);
+			gameManager.update(camera.getCameraPosition(), enemies);
 
-		// --- QUEST LOGIC UPDATE ---
+			// --- QUEST LOGIC UPDATE ---
 
-		// 1. Sync Grail visibility with GameManager
-		// If the Boss is dead, GameManager sets grailSpawned = true.
-		// We make the item physical/visible only if it hasn't been collected yet.
-		if (gameManager.grailSpawned && !grail.isCollected) {
-			grail.isActive = true;
-		}
+			// 1. Sync Grail visibility with GameManager
+			if (gameManager.grailSpawned && !grail.isCollected) {
+				grail.isActive = true;
+			}
 
-		// --- QUEST ITEM COLLISIONS ---
+			// --- QUEST ITEM COLLISIONS ---
 
-		// Staff Collision
-		if (staff.isActive && playerBox.checkCollision(staff.box)) {
-			std::cout << "Staff collected!" << std::endl;
+			// Staff Collision
+			if (staff.isActive && playerBox.checkCollision(staff.box)) {
+				std::cout << "Staff collected!" << std::endl;
 
-			staff.isCollected = true;
-			staff.isActive = false; // Hide it
+				staff.isCollected = true;
+				staff.isActive = false; // Hide it
 
-			if (gameManager.currentTaskIndex == 0) {
-				gameManager.tasks[0].isCompleted = true;
+				if (gameManager.currentTaskIndex == 0) {
+					gameManager.tasks[0].isCompleted = true;
+				}
+			}
+
+			// Grail Collision
+			if (grail.isActive && playerBox.checkCollision(grail.box)) {
+				std::cout << "Holy Grail collected!" << std::endl;
+
+				grail.isCollected = true;
+				grail.isActive = false; // Hide it (put in inventory)
+
+				if (gameManager.currentTaskIndex == 3) {
+					gameManager.tasks[3].isCompleted = true;
+
+					gameManager.grailSpawned = false;
+				}
 			}
 		}
+		else if (gameManager.isGameOver || gameManager.gameFinished) { // Added gameFinished to allow restart on win too
 
-		// Grail Collision
-		if (grail.isActive && playerBox.checkCollision(grail.box)) {
-			std::cout << "Holy Grail collected!" << std::endl;
+			static bool enterPressedLastFrame = false;
+			bool enterPressedNow = window.isPressed(GLFW_KEY_ENTER);
 
-			grail.isCollected = true;
-			grail.isActive = false; // Hide it (put in inventory)
-
-			if (gameManager.currentTaskIndex == 3) {
-				gameManager.tasks[3].isCompleted = true;
-
-				gameManager.grailSpawned = false;
+			if (enterPressedNow && !enterPressedLastFrame) {
+				resetGame();
 			}
+
+			enterPressedLastFrame = enterPressedNow;
 		}
 
 		// Check collisions
@@ -184,8 +223,8 @@ int main()
 			if (enemy.isDead) continue;
 
 			if (playerBox.checkCollision(enemy.box)) {
-				std::cout << "Merlin collided with an Enemy!" << std::endl;
-				// TODO: Reduce Player Health
+				std::cout << "GAME OVER: Touched by enemy!" << std::endl;
+				gameManager.isGameOver = true; // Trigger Defeat
 			}
 		}
 
@@ -250,30 +289,6 @@ int main()
 			}
 		}
 
-		//Draw enemies
-
-		for (auto& enemy : enemies)
-		{
-			if (enemy.isDead) continue;
-
-			ModelMatrix = glm::mat4(1.0);
-			ModelMatrix = glm::translate(ModelMatrix, enemy.position);
-
-			// Scale based on enemy type
-			if (enemy.type == EnemyType::BOSS) {
-				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(3.0f)); // Big Boss
-				glUniform3f(ObjectColorID, 0.8f, 0.0f, 0.8f); // Purple Color
-			}
-			else {
-				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(1.0f)); // Normal Zombie
-				glUniform3f(ObjectColorID, 0.0f, 1.0f, 0.0f); // Green Color
-			}
-
-			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
-			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-			sun.draw(sunShader);
-		}
 
 		// Draw Quest Items
 
@@ -331,6 +346,30 @@ int main()
 
 		plane.draw(shader);
 
+		// Draw enemies
+		for (auto& enemy : enemies) {
+			if (enemy.isDead) continue;
+
+			ModelMatrix = glm::mat4(1.0);
+
+			ModelMatrix = glm::translate(ModelMatrix, enemy.position);
+			
+			ModelMatrix = glm::rotate(ModelMatrix, glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+			if (enemy.type == EnemyType::BOSS) {
+				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(30.0f));
+			}
+			else {
+				ModelMatrix = glm::scale(ModelMatrix, glm::vec3(10.0f));
+			}
+
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+			glUniformMatrix4fv(MatrixID2, 1, GL_FALSE, &MVP[0][0]);
+			glUniformMatrix4fv(ModelMatrixID, 1, GL_FALSE, &ModelMatrix[0][0]);
+			zombieMesh.draw(shader);
+		}
+
 		// ImGui Rendering Logic
 		// ---------------------------------------------------------
 
@@ -352,17 +391,24 @@ int main()
 		//Begin the ImGui Window
 		if (ImGui::Begin("TaskOverlay", NULL, window_flags))
 		{
-			// Set font scale (make it larger for better visibility)
-			ImGui::SetWindowFontScale(1.5f);
-
-			// Display a static title in Yellow
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "CURRENT OBJECTIVE:");
-
-			// Get the current task description from GameManager
-			std::string currentTask = gameManager.getCurrentTaskInfo();
-
-			// Display the task text in White
-			ImGui::Text("%s", currentTask.c_str());
+			if (gameManager.isGameOver) {
+				// DEFEAT SCREEN UI
+				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "YOU DIED");
+				ImGui::Text("The darkness has consumed you.");
+				ImGui::Separator();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Press ENTER to restart the game");
+			}
+			else if (gameManager.gameFinished) {
+				// VICTORY SCREEN UI
+				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "VICTORY!");
+				ImGui::Text("Camelot is saved.");
+			}
+			else {
+				// NORMAL HUD
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "CURRENT OBJECTIVE:");
+				std::string currentTask = gameManager.getCurrentTaskInfo();
+				ImGui::Text("%s", currentTask.c_str());
+			}
 		}
 		ImGui::End();
 

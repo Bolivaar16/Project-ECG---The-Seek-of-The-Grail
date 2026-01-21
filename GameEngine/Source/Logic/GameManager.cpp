@@ -7,6 +7,7 @@ GameManager::GameManager() {
     gameFinished = false;
     grailSpawned = false;
     grailPosition = glm::vec3(0.0f, 0.0f, -20.0f);
+    isGameOver = false;
 
     // 1. Search among the rocks
     Task t1;
@@ -25,7 +26,8 @@ GameManager::GameManager() {
     t2.isCompleted = false;
     tasks.push_back(t2);
 
-    // 3. Kill the Boss
+    // 3. Kill the 
+
     Task t3;
     t3.description = "Mission 3: THE BOSS HAS AWAKENED! Finish him.";
     t3.requiredKills = 1; // The boss counts as 1 special kill
@@ -139,3 +141,4 @@ void checkProjectileCollisions(std::vector<Projectile>& projectiles, std::vector
         }
     }
 }
+

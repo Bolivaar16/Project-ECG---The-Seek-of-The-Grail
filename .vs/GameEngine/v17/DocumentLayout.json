@@ -90,8 +90,7 @@
               "RelativeToolTip": "GameEngine\\Include\\Player\\QuestItem.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-01-20T21:50:07.052Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T21:50:07.052Z"
             },
             {
               "$type": "Document",
@@ -103,8 +102,7 @@
               "RelativeToolTip": "GameEngine\\Source\\Player\\QuestItem.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-20T21:49:37.084Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T21:49:37.084Z"
             },
             {
               "$type": "Document",
@@ -128,8 +126,7 @@
               "RelativeToolTip": "GameEngine\\Source\\Logic\\GameManager.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAHkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-20T16:50:00.914Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T16:50:00.914Z"
             },
             {
               "$type": "Document",
