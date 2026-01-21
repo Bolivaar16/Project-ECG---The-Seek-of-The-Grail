@@ -1,3 +1,7 @@
+#include <cstdlib>
+#include <ctime>
+#include <cmath>
+#include <iostream>
 #include "Graphics\window.h"
 #include "Camera\camera.h"
 #include "Shaders\shader.h"
@@ -57,8 +61,8 @@ std::vector<Projectile> fireballs;
 // Enemies container
 std::vector<Enemy> enemies;
 //Quest Items
-QuestItem staff(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(3.0f, 3.0f, 3.0f));
-QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+QuestItem staff(glm::vec3(95.0f, 0.0f, -809.0f), glm::vec3(5.0f, 5.0f, 5.0f));
+QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(3.5f, 3.5f, 3.5f));
 glm::vec3 bossDeathPosition;
 
 glm::vec3 lightColor = glm::vec3(1.0f);
@@ -73,6 +77,10 @@ std::vector<glm::vec3> ruinsPositions = {
 	glm::vec3(2.0f, 0.0f,  15.0f)
 };
 
+float getRandomRange(float min, float max) {
+	return min + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (max - min)));
+}
+
 void resetGame() {
 	std::cout << "Restarting Game..." << std::endl;
 
@@ -84,7 +92,16 @@ void resetGame() {
 
 	// Spawn ONLY the zombies initially
 	for (int i = 0; i < 5; i++) {
-		glm::vec3 pos = glm::vec3(-10.0f + (i * 5.0f), 0.0f, -15.0f + (i * 2.0f));
+		float angle = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 6.2831f;
+
+		float radius = 500.0f + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 500.0f);
+
+		float offsetX = cos(angle) * radius;
+		float offsetZ = sin(angle) * radius;
+
+		glm::vec3 playerPos = camera.getCameraPosition();
+		glm::vec3 pos = glm::vec3(playerPos.x + offsetX, 0.0f, playerPos.z + offsetZ);
+
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
 	}
 
@@ -92,11 +109,11 @@ void resetGame() {
 	grailLanded = false;
 
 	// 2. Reset Quest Items
-	staff = QuestItem(glm::vec3(10.0f, 0.0f, 100.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+	staff = QuestItem(glm::vec3(95.0f, 0.0f, -809.0f), glm::vec3(5.0f, 5.0f, 5.0f));
 	staff.isActive = true;
 	staff.isCollected = false;
 
-	grail = QuestItem(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+	grail = QuestItem(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(3.5f, 3.5f, 3.5f));
 	grail.isActive = false;
 	grail.isCollected = false;
 
@@ -175,6 +192,7 @@ glm::vec3 rocksPositions[] = {
 
 int main()
 {
+	srand(static_cast<unsigned int>(time(0)));
 	glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
 
 	//building and compiling shader program
@@ -260,8 +278,16 @@ int main()
 	// Zombi
 
 	for (int i = 0; i < 5; i++) {
-		// Spawning them in a line for testing
-		glm::vec3 pos = glm::vec3(-10.0f + (i * 4.0f), 0.0f, 0.0f);
+		float angle = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 6.2831f;
+
+		float radius = 500.0f + (static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * 500.0f);
+
+		float offsetX = cos(angle) * radius;
+		float offsetZ = sin(angle) * radius;
+
+		glm::vec3 playerPos = camera.getCameraPosition();
+		glm::vec3 pos = glm::vec3(playerPos.x + offsetX, 0.0f, playerPos.z + offsetZ);
+
 		enemies.push_back(Enemy(pos, EnemyType::ZOMBIE));
 	}
 
@@ -491,15 +517,16 @@ int main()
 			glUniform3f(ObjectColorID, 1.0f, 0.84f, 0.0f);
 			grailMesh.draw(shader);
 
+			float verticalSpread = 60.0f;
 			float rayTime = glfwGetTime();
 			for (int i = 0; i < 8; i++) {
 				glm::mat4 RayMatrix = glm::mat4(1.0);
 				RayMatrix = glm::translate(RayMatrix, drawPos);
 
-				float angleY = (rayTime * 50.0f) + (i * 60.0f);
+				float angleY = (rayTime * 100.0f) + (i * 30.0f);
 				RayMatrix = glm::rotate(RayMatrix, glm::radians(angleY), glm::vec3(0.0f, 1.0f, 0.0f));
 
-				float angleX = (i % 2 == 0) ? 45.0f : -45.0f;
+				float angleX = (i % 2 == 0) ? verticalSpread : -verticalSpread;
 				RayMatrix = glm::rotate(RayMatrix, glm::radians(angleX), glm::vec3(1.0f, 0.0f, 0.0f));
 
 				RayMatrix = glm::scale(RayMatrix, glm::vec3(0.02f, 0.02f, 2.5f));
@@ -572,59 +599,10 @@ int main()
 			zombieMesh.draw(shader);
 		}
 
-		// ImGui Rendering Logic
-		// ---------------------------------------------------------
-
-		// Start a new frame
-		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplGlfw_NewFrame();
-		ImGui::NewFrame();
-
-		// Define the HUD Window properties
-		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration |
-			ImGuiWindowFlags_AlwaysAutoResize |
-			ImGuiWindowFlags_NoSavedSettings |
-			ImGuiWindowFlags_NoFocusOnAppearing |
-			ImGuiWindowFlags_NoNav;
-
-		ImGui::SetNextWindowPos(ImVec2(10.0f, 10.0f));
-		ImGui::SetNextWindowBgAlpha(0.35f);
-
-		//Begin the ImGui Window
-		if (ImGui::Begin("TaskOverlay", NULL, window_flags))
-		{
-			if (gameManager.isGameOver) {
-				// DEFEAT SCREEN UI
-				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "YOU DIED");
-				ImGui::Text("The darkness has consumed you.");
-				ImGui::Separator();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Press ENTER to restart the game");
-			}
-			else if (gameManager.gameFinished) {
-				// VICTORY SCREEN UI
-				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "VICTORY!");
-				ImGui::Text("Camelot is saved.");
-			}
-			else {
-				// NORMAL HUD
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "CURRENT OBJECTIVE:");
-				std::string currentTask = gameManager.getCurrentTaskInfo();
-				ImGui::Text("%s", currentTask.c_str());
-			}
-		}
-		ImGui::End();
-
-		//Render ImGui data onto the screen
-		glDisable(GL_DEPTH_TEST);
-		ImGui::Render();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		glEnable(GL_DEPTH_TEST);
-
 		for (int i = 0; i < mountainsPositions.size(); i++)
 		{
 			ModelMatrix = glm::mat4(1.0);
 			ModelMatrix = glm::translate(ModelMatrix, mountainsPositions[i]);
-			// Escala normal/pequeña para obstaculos
 			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(300.5f, 300.5f, 300.5f));
 
 			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
@@ -684,7 +662,53 @@ int main()
 
 			realRock.draw(shader);
 		}
+		// ImGui Rendering Logic
+		// ---------------------------------------------------------
 
+		// Start a new frame
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+
+		// Define the HUD Window properties
+		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration |
+			ImGuiWindowFlags_AlwaysAutoResize |
+			ImGuiWindowFlags_NoSavedSettings |
+			ImGuiWindowFlags_NoFocusOnAppearing |
+			ImGuiWindowFlags_NoNav;
+
+		ImGui::SetNextWindowPos(ImVec2(10.0f, 10.0f));
+		ImGui::SetNextWindowBgAlpha(0.35f);
+
+		//Begin the ImGui Window
+		if (ImGui::Begin("TaskOverlay", NULL, window_flags))
+		{
+			if (gameManager.isGameOver) {
+				// DEFEAT SCREEN UI
+				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "YOU DIED");
+				ImGui::Text("The darkness has consumed you.");
+				ImGui::Separator();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Press ENTER to restart the game");
+			}
+			else if (gameManager.gameFinished) {
+				// VICTORY SCREEN UI
+				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "VICTORY!");
+				ImGui::Text("Camelot is saved.");
+			}
+			else {
+				// NORMAL HUD
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "CURRENT OBJECTIVE:");
+				std::string currentTask = gameManager.getCurrentTaskInfo();
+				ImGui::Text("%s", currentTask.c_str());
+			}
+		}
+		ImGui::End();
+
+		//Render ImGui data onto the screen
+		glDisable(GL_DEPTH_TEST);
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		glEnable(GL_DEPTH_TEST);
 		window.update();
 	}
 
@@ -695,7 +719,7 @@ int main()
 
 void processKeyboardInput()
 {
-	float cameraSpeed = 30 * deltaTime;
+	float cameraSpeed = 50 * deltaTime;
 
 	//translation
 	if (window.isPressed(GLFW_KEY_W))
@@ -706,12 +730,14 @@ void processKeyboardInput()
 		camera.keyboardMoveLeft(cameraSpeed);
 	if (window.isPressed(GLFW_KEY_D))
 		camera.keyboardMoveRight(cameraSpeed);
-	if (window.isPressed(GLFW_KEY_R))
-		camera.keyboardMoveUp(cameraSpeed);
+	if (window.isPressed(GLFW_KEY_R)) {
+		glm::vec3 playerPos = camera.getCameraPosition();
+		std::cout << "x:" << playerPos.x << "y:" << playerPos.y << "z:" << playerPos.z << std::endl;
+	}
 	// Shooting mechanic
 	static float lastShotTime = 0.0f;
 	float currentTime = glfwGetTime();
-	if (window.isPressed(GLFW_KEY_F) && (currentTime - lastShotTime > 0.5f)) // 0.5s cooldown
+	if (window.isPressed(GLFW_KEY_F) && (currentTime - lastShotTime > 0.5f) && staff.isCollected) // 0.5s cooldown
 	{
 		// Spawn fireball at camera position, moving in camera direction
 		fireballs.push_back(Projectile(camera.getCameraPosition() - glm::vec3(10.0f, 0.5f, 10.0f), camera.getCameraViewDirection()));

@@ -13,7 +13,7 @@ Enemy::Enemy(glm::vec3 startPos, EnemyType enemyType) {
     }
     else {
         health = 100.0f;
-        size = glm::vec3(10.0f, 10.0f, 10.0f);
+        size = glm::vec3(10.0f, 20.0f, 10.0f);
     }
 
     box = BoundingBox(position, size);
@@ -24,7 +24,7 @@ void Enemy::update(float deltaTime, glm::vec3 playerPos) {
 
     //Movement towards the player
     glm::vec3 direction = glm::normalize(playerPos - position);
-    float speed = (type == EnemyType::BOSS) ? 2.0f : 1.0f;
+    float speed = (type == EnemyType::BOSS) ? 20.0f : 30.0f;
     position += direction * speed * deltaTime;
     box.update(position, size);
 }
