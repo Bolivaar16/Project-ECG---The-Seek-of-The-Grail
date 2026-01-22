@@ -61,7 +61,7 @@ std::vector<Projectile> fireballs;
 // Enemies container
 std::vector<Enemy> enemies;
 //Quest Items
-QuestItem staff(glm::vec3(95.0f, 0.0f, -809.0f), glm::vec3(5.0f, 5.0f, 5.0f));
+QuestItem staff(glm::vec3(95.0f, -15.0f, -809.0f), glm::vec3(15.0f, 50.0f, 15.0f));
 QuestItem grail(glm::vec3(0.0f, 0.0f, -20.0f), glm::vec3(3.5f, 3.5f, 3.5f));
 glm::vec3 bossDeathPosition;
 
@@ -109,7 +109,7 @@ void resetGame() {
 	grailLanded = false;
 
 	// 2. Reset Quest Items
-	staff = QuestItem(glm::vec3(95.0f, 0.0f, -809.0f), glm::vec3(5.0f, 5.0f, 5.0f));
+	staff = QuestItem(glm::vec3(95.0f, -15.0f, -809.0f), glm::vec3(15.0f, 50.0f, 15.0f));
 	staff.isActive = true;
 	staff.isCollected = false;
 
@@ -200,7 +200,7 @@ int main()
 	Shader sunShader("Shaders/sun_vertex_shader.glsl", "Shaders/sun_fragment_shader.glsl");
 
 	//Textures
-	GLuint tex = loadBMP("Resources/Textures/wood.bmp");
+	GLuint texWood = loadBMP("Resources/Textures/wood.bmp");
 	GLuint tex2 = loadBMP("Resources/Textures/rock.bmp");
 	GLuint tex3 = loadBMP("Resources/Textures/orange.bmp");
 	GLuint tex4 = loadBMP("Resources/Textures/rock_real.bmp");
@@ -220,11 +220,17 @@ int main()
 	ImGui_ImplGlfw_InitForOpenGL(window.getWindow(), true);
 	ImGui_ImplOpenGL3_Init("#version 400");
 
+	
 
 	std::vector<Texture> textures2;
 	textures2.push_back(Texture());
 	textures2[0].id = tex2;
 	textures2[0].type = "texture_diffuse";
+
+	std::vector<Texture> textures;
+	textures.push_back(Texture());
+	textures[0].id = texWood;
+	textures[0].type = "texture_diffuse";
 
 	std::vector<Texture> textures3;
 	textures3.push_back(Texture());
@@ -267,6 +273,7 @@ int main()
 	Mesh castleMesh = loader.loadObj("Resources/Models/castle.obj", textures6);
 	Mesh zombieMesh = loader.loadObj("Resources/Models/zombi.obj", zombieTextures);
 	Mesh grailMesh = loader.loadObj("Resources/Models/Grail.obj", grailTextures);
+	Mesh wandMesh = loader.loadObj("Resources/Models/Wand.obj", textures);
 
 	// Initialization
 	// Player
@@ -489,16 +496,7 @@ int main()
 
 		// Draw Quest Items
 
-		// Draw Staff
-		if (staff.isActive) {
-			ModelMatrix = glm::mat4(1.0);
-			ModelMatrix = glm::translate(ModelMatrix, staff.position);
-			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.5f));
-			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
-			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-			glUniform3f(ObjectColorID, 0.6f, 0.4f, 0.2f); // Brown
-			sun.draw(sunShader);
-		}
+		
 
 		// Draw Grail
 		if (grail.isActive) {
@@ -541,6 +539,17 @@ int main()
 
 
 		shader.use();
+
+		// Draw Staff
+		if (staff.isActive) {
+			ModelMatrix = glm::mat4(1.0);
+			ModelMatrix = glm::translate(ModelMatrix, staff.position);
+			ModelMatrix = glm::rotate(ModelMatrix, 180.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+			ModelMatrix = glm::scale(ModelMatrix, glm::vec3(0.5f));
+			MVP = ProjectionMatrix * ViewMatrix * ModelMatrix;
+			glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+			wandMesh.draw(shader);
+		}
 
 		///// Test Obj files for box ////
 
@@ -719,7 +728,7 @@ int main()
 
 void processKeyboardInput()
 {
-	float cameraSpeed = 50 * deltaTime;
+	float cameraSpeed = 100 * deltaTime;
 
 	//translation
 	if (window.isPressed(GLFW_KEY_W))

@@ -61,7 +61,7 @@ void GameManager::update(glm::vec3 playerPos, std::vector<Enemy>& enemies) {
     // MISSION 1 LOGIC: Go to the rocks
     if (currentTaskIndex == 0) {
         // Let's say the rocks are at (10, 0, 10)
-        if (glm::distance(playerPos, glm::vec3(10.0f, 0.0f, 100.0f)) < 5.0f) {
+        if (glm::distance(playerPos, glm::vec3(95.0f, 0.0f, -809.0f)) < 5.0f) {
             current.isCompleted = true;
         }
     }

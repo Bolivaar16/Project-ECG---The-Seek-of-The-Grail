@@ -7,6 +7,18 @@
       "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\Source\\Logic\\GameManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Resources\\Imgui\\imgui_impl_glfw.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\Resources\\Imgui\\imgui_impl_glfw.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Resources\\Imgui\\imgui_impl_opengl3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\Resources\\Imgui\\imgui_impl_opengl3.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Player\\Enemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\Source\\Player\\Enemy.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
@@ -17,10 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Include\\Player\\Enemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\Include\\Player\\Enemy.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|solutionrelative:GameEngine\\Source\\Logic\\GameManager.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{7DB4A041-6210-429F-8FF3-63462ADD6A69}|GameEngine\\GameEngine.vcxproj|C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Include\\Player\\QuestItem.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -78,11 +86,37 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 2,
+              "Title": "imgui_impl_glfw.cpp",
+              "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Resources\\Imgui\\imgui_impl_glfw.cpp",
+              "RelativeDocumentMoniker": "GameEngine\\Resources\\Imgui\\imgui_impl_glfw.cpp",
+              "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Resources\\Imgui\\imgui_impl_glfw.cpp",
+              "RelativeToolTip": "GameEngine\\Resources\\Imgui\\imgui_impl_glfw.cpp",
+              "ViewState": "AgIAAFgAAAAAAAAAAAAAwGUAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-01-22T00:45:56.036Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "imgui_impl_opengl3.cpp",
+              "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Resources\\Imgui\\imgui_impl_opengl3.cpp",
+              "RelativeDocumentMoniker": "GameEngine\\Resources\\Imgui\\imgui_impl_opengl3.cpp",
+              "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Resources\\Imgui\\imgui_impl_opengl3.cpp",
+              "RelativeToolTip": "GameEngine\\Resources\\Imgui\\imgui_impl_opengl3.cpp",
+              "ViewState": "AgIAAJ0AAAAAAAAAAAAAwKsAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-01-22T00:42:24.523Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "QuestItem.h",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Include\\Player\\QuestItem.h",
               "RelativeDocumentMoniker": "GameEngine\\Include\\Player\\QuestItem.h",
@@ -94,7 +128,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 5,
               "Title": "QuestItem.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Player\\QuestItem.cpp",
               "RelativeDocumentMoniker": "GameEngine\\Source\\Player\\QuestItem.cpp",
@@ -102,12 +136,11 @@
               "RelativeToolTip": "GameEngine\\Source\\Player\\QuestItem.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-20T21:49:37.084Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T21:49:37.084Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "Enemy.h",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Include\\Player\\Enemy.h",
               "RelativeDocumentMoniker": "GameEngine\\Include\\Player\\Enemy.h",
@@ -115,8 +148,7 @@
               "RelativeToolTip": "GameEngine\\Include\\Player\\Enemy.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2026-01-20T17:22:28.102Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T17:22:28.102Z"
             },
             {
               "$type": "Document",
@@ -126,26 +158,27 @@
               "RelativeDocumentMoniker": "GameEngine\\main.cpp",
               "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\main.cpp",
               "RelativeToolTip": "GameEngine\\main.cpp",
-              "ViewState": "AgIAAFoAAAAAAAAAAAAUwG8AAAAyAAAAAAAAAA==",
+              "ViewState": "AgIAADEAAAAAAAAAAAAlwD8AAABFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2026-01-19T10:31:42.625Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 1,
               "Title": "GameManager.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp",
               "RelativeDocumentMoniker": "GameEngine\\Source\\Logic\\GameManager.cpp",
               "ToolTip": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Logic\\GameManager.cpp",
               "RelativeToolTip": "GameEngine\\Source\\Logic\\GameManager.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAEEAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-20T16:50:00.914Z"
+              "WhenOpened": "2026-01-20T16:50:00.914Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 11,
               "Title": "sun_vertex_shader.glsl",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Shaders\\sun_vertex_shader.glsl",
               "RelativeDocumentMoniker": "GameEngine\\Shaders\\sun_vertex_shader.glsl",
@@ -157,7 +190,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "camera.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Camera\\camera.cpp",
               "RelativeDocumentMoniker": "GameEngine\\Camera\\camera.cpp",
@@ -169,7 +202,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Enemy.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Player\\Enemy.cpp",
               "RelativeDocumentMoniker": "GameEngine\\Source\\Player\\Enemy.cpp",
@@ -177,12 +210,11 @@
               "RelativeToolTip": "GameEngine\\Source\\Player\\Enemy.cpp",
               "ViewState": "AgIAAAMAAAAAAAAAAAAAAA8AAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2026-01-20T17:22:37.396Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-01-20T17:22:37.396Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 12,
               "Title": "sun_fragment_shader.glsl",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Shaders\\sun_fragment_shader.glsl",
               "RelativeDocumentMoniker": "GameEngine\\Shaders\\sun_fragment_shader.glsl",
@@ -194,7 +226,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 13,
               "Title": "vertex_shader.glsl",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Shaders\\vertex_shader.glsl",
               "RelativeDocumentMoniker": "GameEngine\\Shaders\\vertex_shader.glsl",
@@ -206,7 +238,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 8,
               "Title": "Projectile.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Player\\Projectile.cpp",
               "RelativeDocumentMoniker": "GameEngine\\Source\\Player\\Projectile.cpp",
@@ -218,7 +250,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "BoundingBox.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Source\\Physics\\BoundingBox.cpp",
               "RelativeDocumentMoniker": "GameEngine\\Source\\Physics\\BoundingBox.cpp",
@@ -230,7 +262,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 15,
               "Title": "GameManager.h",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Include\\Logic\\GameManager.h",
               "RelativeDocumentMoniker": "GameEngine\\Include\\Logic\\GameManager.h",
@@ -242,7 +274,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 14,
               "Title": "Projectile.h",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Include\\Player\\Projectile.h",
               "RelativeDocumentMoniker": "GameEngine\\Include\\Player\\Projectile.h",
@@ -254,7 +286,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 17,
               "Title": "BoundingBox.h",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Include\\Physics\\BoundingBox.h",
               "RelativeDocumentMoniker": "GameEngine\\Include\\Physics\\BoundingBox.h",
@@ -266,7 +298,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 16,
               "Title": "mesh.cpp",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Model Loading\\mesh.cpp",
               "RelativeDocumentMoniker": "GameEngine\\Model Loading\\mesh.cpp",
@@ -278,7 +310,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 18,
               "Title": "fragment_shader.glsl",
               "DocumentMoniker": "C:\\Users\\alexb\\Proyectos\\Project 2 - The seek of the grail\\Project-ECG---The-Seek-of-The-Grail\\GameEngine\\Shaders\\fragment_shader.glsl",
               "RelativeDocumentMoniker": "GameEngine\\Shaders\\fragment_shader.glsl",
